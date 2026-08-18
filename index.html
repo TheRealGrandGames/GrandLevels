@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Levels - Baldi's Basics Plus Level Studio Repository</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        baldi: {
+                            green: '#008000',
+                            lightgreen: '#2eac2e',
+                            yellow: '#ffea00',
+                            red: '#e60000',
+                            blue: '#0000ff',
+                            chalkboard: '#1b3b22',
+                            panel: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        fredoka: ['Fredoka', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .baldi-font {
+            font-family: 'Fredoka', cursive;
+        }
+
+        .chalkboard-bg {
+            background-color: #14281a;
+            background-image: radial-gradient(#2d5738 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-baldi-yellow selection:text-black">
+
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo & Title -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="resetFilters()">
+                    <div class="w-12 h-12 rounded-xl bg-baldi-green flex items-center justify-center border-2 border-baldi-yellow shadow-lg shadow-baldi-green/30 transform hover:rotate-3 transition-transform">
+                        <i class="fa-solid me-0.5 fa-school text-2xl text-baldi-yellow"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-2xl sm:text-3xl font-black tracking-wider text-white baldi-font">
+                                GRAND <span class="text-baldi-yellow">LEVELS</span>
+                            </h1>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-baldi-green/30 text-emerald-400 border border-emerald-500/30">
+                                Level Studio Mod
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400">Baldi's Basics Plus Custom Level Repository</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Action Buttons -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="openInstallModal()" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-baldi-yellow"></i>
+                        <span>How to Install</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="chalkboard-bg border-b border-emerald-900/50 py-10 px-4 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10 text-center sm:text-left flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="max-w-2xl">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight baldi-font mb-3">
+                    Discover & Download <br><span class="text-baldi-yellow">Custom Baldi Levels</span>
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Browse user-created schoolhouses, custom challenges, and insane notebook mazes built for the Baldi's Basics Plus Level Studio mod. 
+                </p>
+            </div>
+
+            <!-- Stats Badge Box -->
+            <div class="grid grid-cols-1 gap-3 sm:gap-4 w-full md:w-auto">
+                <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-700/60 p-4 rounded-xl text-center">
+                    <div id="stat-total-levels" class="text-2xl sm:text-3xl font-black text-baldi-yellow baldi-font">0</div>
+                    <div class="text-xs text-slate-400 font-medium mt-1">Total Levels</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Search and Filter Bar -->
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-8 shadow-lg">
+            <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+                
+                <!-- Search Input Box -->
+                <div class="relative w-full lg:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" oninput="applyFilters()" placeholder="Search level name, description, author..." 
+                        class="w-full pl-11 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-baldi-green focus:ring-1 focus:ring-baldi-green transition">
+                </div>
+
+                <!-- Filters & Controls Group -->
+                <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                    
+                    <!-- Difficulty Filter -->
+                    <div class="flex-1 sm:flex-initial">
+                        <select id="difficulty-filter" onchange="applyFilters()" 
+                            class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-baldi-green">
+                            <option value="ALL">All Difficulties</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Extreme">Extreme</option>
+                            <option value="Custom">Custom / Unique</option>
+                        </select>
+                    </div>
+
+                    <!-- Sort Order -->
+                    <div class="flex-1 sm:flex-initial">
+                        <select id="sort-filter" onchange="applyFilters()" 
+                            class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-baldi-green">
+                            <option value="NEWEST">Sort: Newest First</option>
+                            <option value="NAME_ASC">Sort: Name (A-Z)</option>
+                            <option value="NOTEBOOKS_DESC">Sort: Most Notebooks</option>
+                            <option value="NOTEBOOKS_ASC">Sort: Fewest Notebooks</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <button onclick="resetFilters()" class="p-2.5 bg-slate-700 hover:bg-slate-600 rounded-xl text-slate-300 transition" title="Reset Filters">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="levels-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Level cards dynamically rendered here -->
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="empty-state" class="hidden text-center py-16 bg-slate-800/40 border border-slate-700/50 rounded-2xl">
+            <div class="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400 text-2xl">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-200">No Baldi levels found</h3>
+            <p class="text-slate-400 text-sm mt-1 max-w-md mx-auto">
+                No level matches your search criteria. Try clearing filters!
+            </p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-baldi-green hover:bg-baldi-lightgreen text-white rounded-lg text-sm font-semibold transition">
+                Reset Filters
+            </button>
+        </div>
+    </main>
+
+    <div id="level-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl relative">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-800 flex items-start justify-between bg-slate-950/60 sticky top-0 z-10 backdrop-blur-md">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span id="modal-difficulty" class="px-2.5 py-0.5 text-xs font-bold rounded-full"></span>
+                        <span id="modal-version" class="text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded"></span>
+                    </div>
+                    <h2 id="modal-title" class="text-2xl font-black text-white baldi-font"></h2>
+                    <p class="text-xs text-slate-400 mt-1">Created by <span id="modal-author" class="text-baldi-yellow font-semibold"></span></p>
+                </div>
+                <button onclick="closeLevelModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 space-y-6">
+                
+                <!-- Level Thumbnail / Cover Banner -->
+                <div class="relative h-48 sm:h-56 rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+                    <img id="modal-image" src="" alt="Level Thumbnail" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end">
+                        <div class="bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-hard-drive text-baldi-yellow"></i>
+                            <span id="modal-filesize"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notebook Counter Box -->
+                <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-red-950/80 border border-red-700/60 rounded-xl flex items-center justify-center text-red-500 text-xl shadow-inner">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Notebook Objective</div>
+                            <div class="text-xl font-black text-white flex items-center gap-1.5 baldi-font">
+                                <span id="modal-notebooks-count"></span> Notebooks to Collect
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modal-notebook-icons" class="hidden sm:flex gap-1 text-red-500 text-lg">
+                        <!-- Dynamic Notebook icons -->
+                    </div>
+                </div>
+
+                <!-- Level Description -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Description</h4>
+                    <p id="modal-description" class="text-slate-300 text-sm leading-relaxed bg-slate-950/40 p-4 rounded-xl border border-slate-800/80"></p>
+                </div>
+
+                <!-- Installation Instructions -->
+                <div class="bg-emerald-950/30 border border-emerald-900/60 p-4 rounded-xl">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-download"></i> Installation Note
+                    </h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Download the level file below and place it into your Level Studio levels folder (e.g. <code class="bg-slate-900 px-1.5 py-0.5 rounded text-baldi-yellow font-mono text-[11px]">BaldiPlus/LevelStudio/CustomLevels/</code>).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer Controls -->
+            <div class="p-6 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-center gap-3">
+                <a id="modal-download-btn" href="#" target="_blank" download class="w-full sm:flex-1 py-3 px-4 bg-baldi-green hover:bg-baldi-lightgreen text-white font-bold rounded-xl text-center shadow-lg shadow-baldi-green/30 transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-file-arrow-down text-baldi-yellow text-base"></i>
+                    <span>Download Level File</span>
+                </a>
+                
+                <button id="modal-copy-link" onclick="copyModalLink()" class="w-full sm:w-auto py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-center transition text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Copy Download URL</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="install-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+                <h3 class="text-xl font-bold text-white baldi-font flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question text-baldi-yellow"></i>
+                    How to Install Levels
+                </h3>
+                <button onclick="closeInstallModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="py-4 space-y-4 text-slate-300 text-sm">
+                <div class="flex gap-3 items-start">
+                    <span class="w-6 h-6 rounded-full bg-baldi-green text-white font-bold flex items-center justify-center text-xs flex-shrink-0">1</span>
+                    <p>Make sure you have <strong>Baldi's Basics Plus</strong> with the <strong>Level Studio Mod</strong> installed.</p>
+                </div>
+                <div class="flex gap-3 items-start">
+                    <span class="w-6 h-6 rounded-full bg-baldi-green text-white font-bold flex items-center justify-center text-xs flex-shrink-0">2</span>
+                    <p>Click <span class="text-baldi-yellow font-bold">Download Level File</span> on any level card on this website.</p>
+                </div>
+                <div class="flex gap-3 items-start">
+                    <span class="w-6 h-6 rounded-full bg-baldi-green text-white font-bold flex items-center justify-center text-xs flex-shrink-0">3</span>
+                    <p>Move the downloaded file into your custom levels folder, usually located at:<br>
+                    <code class="bg-slate-950 text-emerald-400 px-2 py-1 rounded text-xs block mt-1 font-mono">.../BaldiPlus/Mods/LevelStudio/CustomLevels/</code>
+                    </p>
+                </div>
+                <div class="flex gap-3 items-start">
+                    <span class="w-6 h-6 rounded-full bg-baldi-green text-white font-bold flex items-center justify-center text-xs flex-shrink-0">4</span>
+                    <p>Launch Baldi's Basics Plus, open Level Studio, and select your custom level from the custom levels list!</p>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex justify-end">
+                <button onclick="closeInstallModal()" class="px-5 py-2 bg-baldi-green hover:bg-baldi-lightgreen text-white font-bold rounded-xl text-sm transition">
+                    Got it!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-slate-400 text-xs mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-semibold text-slate-300 baldi-font text-sm mb-1">
+                GRAND LEVELS &bull; Baldi's Basics Plus Level Repository
+            </p>
+            <p class="text-slate-500">
+                Not affiliated with or endorsed by Basically Games. Baldi's Basics is created by Micah McGonigal.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /*
+        =======================================================================
+        GRAND LEVELS - BALDI'S BASICS LEVEL STUDIO REPOSITORY DATA & APP LOGIC
+        =======================================================================
+        You can easily add new levels into the `initialLevels` array below!
+        Each level object supports:
+          - id: Unique ID string
+          - name: Level title
+          - author: Creator name
+          - downloadUrl: Direct file download path or external URL
+          - fileSize: File size string (e.g. "1.2 MB")
+          - description: Short description of the level
+          - difficulty: 'Easy' | 'Medium' | 'Hard' | 'Extreme' | 'Custom'
+          - notebooks: Integer count of notebooks in the level
+          - version: Level Studio mod target version
+          - thumbnail: Image URL for cover
+        =======================================================================
+        */
+
+        // Core Level Data Array
+        const initialLevels = [
+            {
+                id: "vent-land",
+                name: "Vent Land",
+                author: "GrandGames",
+                downloadUrl: "",
+                fileSize: "22.6 KB",
+                description: "A land full of vents! Be careful not to choose the wrong one!",
+                difficulty: "Medium",
+                notebooks: 5,
+                version: "v1.0+",
+                thumbnail: ""
+            },
+        ];
+
+        // State Management Variables
+        let currentLevels = [...initialLevels];
+        let filteredLevels = [...initialLevels];
+        let activeModalLevel = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            applyFilters();
+        });
+
+        function applyFilters() {
+            const searchVal = document.getElementById("search-input").value.toLowerCase().trim();
+            const diffVal = document.getElementById("difficulty-filter").value;
+            const sortVal = document.getElementById("sort-filter").value;
+
+            filteredLevels = currentLevels.filter(lvl => {
+                // Search matching
+                const matchesSearch = lvl.name.toLowerCase().includes(searchVal) || 
+                                      lvl.author.toLowerCase().includes(searchVal) || 
+                                      lvl.description.toLowerCase().includes(searchVal);
+
+                // Difficulty matching
+                const matchesDiff = (diffVal === "ALL") || (lvl.difficulty === diffVal);
+
+                return matchesSearch && matchesDiff;
+            });
+
+            // Sorting logic
+            if (sortVal === "NAME_ASC") {
+                filteredLevels.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortVal === "NOTEBOOKS_DESC") {
+                filteredLevels.sort((a, b) => b.notebooks - a.notebooks);
+            } else if (sortVal === "NOTEBOOKS_ASC") {
+                filteredLevels.sort((a, b) => a.notebooks - b.notebooks);
+            } else {
+                // Default NEWEST / ID order
+                filteredLevels.sort((a, b) => b.id.localeCompare(a.id));
+            }
+
+            renderLevelsGrid();
+            updateStats();
+        }
+
+        function resetFilters() {
+            document.getElementById("search-input").value = "";
+            document.getElementById("difficulty-filter").value = "ALL";
+            document.getElementById("sort-filter").value = "NEWEST";
+
+            applyFilters();
+            showToast("Filters reset!");
+        }
+
+        function updateStats() {
+            document.getElementById("stat-total-levels").textContent = currentLevels.length;
+        }
+
+        function getDifficultyBadgeClass(difficulty) {
+            switch (difficulty) {
+                case 'Easy':
+                    return 'bg-emerald-950/80 text-emerald-400 border border-emerald-700/60';
+                case 'Medium':
+                    return 'bg-amber-950/80 text-amber-400 border border-amber-700/60';
+                case 'Hard':
+                    return 'bg-orange-950/80 text-orange-400 border border-orange-700/60';
+                case 'Extreme':
+                    return 'bg-red-950/80 text-red-400 border border-red-700/60';
+                default:
+                    return 'bg-purple-950/80 text-purple-400 border border-purple-700/60';
+            }
+        }
+
+        function renderLevelsGrid() {
+            const grid = document.getElementById("levels-grid");
+            const emptyState = document.getElementById("empty-state");
+
+            if (filteredLevels.length === 0) {
+                grid.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            grid.innerHTML = filteredLevels.map(lvl => {
+                const diffBadgeClass = getDifficultyBadgeClass(lvl.difficulty);
+
+                return `
+                <div class="bg-slate-800/90 border border-slate-700 hover:border-emerald-500/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-emerald-950/50 transition-all duration-300 flex flex-col group">
+                    
+                    <!-- Card Cover Header -->
+                    <div class="relative h-44 overflow-hidden bg-slate-900">
+                        <img src="${lvl.thumbnail}" alt="${lvl.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"></div>
+                        
+                        <!-- Top Badges -->
+                        <div class="absolute top-3 left-3 right-3 flex justify-between items-center">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg ${diffBadgeClass} backdrop-blur-md shadow-md">
+                                ${lvl.difficulty}
+                            </span>
+                            <span class="px-2 py-0.5 text-[11px] font-semibold rounded bg-slate-900/80 text-slate-300 border border-slate-700 backdrop-blur-md">
+                                Notebooks: ${lvl.notebooks}
+                            </span>
+                        </div>
+
+                        <!-- Level Title Over Banner -->
+                        <div class="absolute bottom-3 left-3 right-3">
+                            <h3 class="text-xl font-bold text-white baldi-font drop-shadow-md line-clamp-1 group-hover:text-baldi-yellow transition-colors">
+                                ${lvl.name}
+                            </h3>
+                            <p class="text-xs text-slate-300 flex items-center gap-1">
+                                <i class="fa-solid fa-user-pen text-baldi-yellow text-[10px]"></i> By ${lvl.author}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                        
+                        <!-- Description -->
+                        <p class="text-slate-300 text-xs leading-relaxed line-clamp-3">
+                            ${lvl.description}
+                        </p>
+
+                        <!-- Notebook & Size Stats -->
+                        <div class="grid grid-cols-2 gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/50 text-xs">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-book-bookmark text-red-500 text-sm"></i>
+                                <div>
+                                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Notebooks</div>
+                                    <div class="font-bold text-white">${lvl.notebooks} Total</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-file-arrow-down text-baldi-yellow text-sm"></i>
+                                <div>
+                                    <div class="text-[10px] text-slate-400 uppercase font-semibold">File Size</div>
+                                    <div class="font-bold text-white">${lvl.fileSize || "1.0 MB"}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="pt-2 flex items-center gap-2">
+                            <button onclick="openLevelModal('${lvl.id}')" class="flex-1 py-2.5 px-3 bg-slate-700 hover:bg-slate-600 text-slate-100 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-circle-info"></i> View Details
+                            </button>
+                            <a href="${lvl.downloadUrl}" target="_blank" download onclick="event.stopPropagation(); showToast('Downloading ${lvl.name}...');" class="py-2.5 px-3 bg-baldi-green hover:bg-baldi-lightgreen text-white rounded-xl text-xs font-bold transition shadow-md shadow-baldi-green/20 flex items-center justify-center gap-1.5" title="Direct Download">
+                                <i class="fa-solid fa-download text-baldi-yellow"></i> Download
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openLevelModal(levelId) {
+            const level = currentLevels.find(l => l.id === levelId);
+            if (!level) return;
+
+            activeModalLevel = level;
+
+            document.getElementById("modal-title").textContent = level.name;
+            document.getElementById("modal-author").textContent = level.author;
+            document.getElementById("modal-description").textContent = level.description;
+            document.getElementById("modal-notebooks-count").textContent = level.notebooks;
+            document.getElementById("modal-filesize").textContent = level.fileSize || "1.0 MB";
+            document.getElementById("modal-version").textContent = level.version || "v1.0";
+            document.getElementById("modal-image").src = level.thumbnail;
+            
+            // Difficulty Badge Styling
+            const diffEl = document.getElementById("modal-difficulty");
+            diffEl.textContent = level.difficulty;
+            diffEl.className = `px-2.5 py-0.5 text-xs font-bold rounded-full ${getDifficultyBadgeClass(level.difficulty)}`;
+
+            // Direct Download Button
+            const downloadBtn = document.getElementById("modal-download-btn");
+            downloadBtn.href = level.downloadUrl;
+
+            // Notebook Icons Display
+            const notebookIconsContainer = document.getElementById("modal-notebook-icons");
+            const notebookCount = Math.min(level.notebooks, 10); // cap visual icons at 10 max
+            let iconsHtml = '';
+            for (let i = 0; i < notebookCount; i++) {
+                iconsHtml += `<i class="fa-solid fa-book-bookmark transform hover:scale-125 transition-transform" title="Notebook #${i+1}"></i>`;
+            }
+            if (level.notebooks > 10) {
+                iconsHtml += `<span class="text-xs font-bold text-slate-400 flex items-center">+${level.notebooks - 10}</span>`;
+            }
+            notebookIconsContainer.innerHTML = iconsHtml;
+
+            // Display Modal
+            document.getElementById("level-modal").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeLevelModal() {
+            document.getElementById("level-modal").classList.add("hidden");
+            document.body.style.overflow = "";
+            activeModalLevel = null;
+        }
+
+        function copyModalLink() {
+            if (!activeModalLevel) return;
+            const textToCopy = activeModalLevel.downloadUrl;
+            
+            // Fallback copy execution
+            const tempInput = document.createElement("input");
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            showToast("Download URL copied to clipboard!");
+        }
+
+        function openInstallModal() {
+            document.getElementById("install-modal").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeInstallModal() {
+            document.getElementById("install-modal").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+
+        function showToast(message) {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = "bg-slate-800 text-slate-100 border border-baldi-green px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform translate-y-4 opacity-0 transition-all duration-300 pointer-events-auto";
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-check text-baldi-yellow text-sm"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove("translate-y-4", "opacity-0");
+            }, 10);
+
+            // Remove after 3s
+            setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-2");
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
